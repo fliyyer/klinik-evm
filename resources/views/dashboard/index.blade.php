@@ -71,51 +71,50 @@
                         </div>
                     </div>
                 @else
+                    @if (session('success'))
+                        <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
                     <h2 class="text-3xl font-bold text-slate-900">Selamat Datang User</h2>
                     <p class="mt-1 text-sm text-slate-500">Cari layanan treatment yang tersedia dan lakukan booking.</p>
 
-                    <div class="mt-6">
+                    <form method="GET" action="{{ route('dashboard') }}" class="mt-6">
                         <label for="search" class="sr-only">Cari layanan</label>
-                        <input id="search" type="text" placeholder="Cari layanan treatment"
-                            class="block w-full rounded-lg border-slate-300 px-3 py-2.5 text-sm shadow-sm focus:border-violet-500 focus:ring-violet-500" />
-                    </div>
+                        <div class="relative">
+                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center ps-3 text-slate-400">
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+                                </svg>
+                            </span>
+                            <input id="search" name="q" type="text" value="{{ $searchQuery ?? '' }}" placeholder="Cari layanan treatment"
+                                class="block w-full rounded-lg border-slate-300 py-2.5 ps-9 pe-3 text-sm shadow-sm focus:border-violet-500 focus:ring-violet-500" />
+                        </div>
+                    </form>
 
                     <div class="mt-5 space-y-4">
-                        <article class="rounded-xl border border-slate-200 p-4 transition hover:shadow-md">
-                            <div class="flex flex-col gap-4 sm:flex-row">
-                                <div class="h-24 w-full rounded-lg bg-slate-200 sm:w-32"></div>
-                                <div class="flex-1">
-                                    <h3 class="text-xl font-semibold">Acne Treatment with Jet Oxy</h3>
-                                    <p class="text-sm font-medium text-slate-600">IDR 210.000</p>
-                                    <p class="mt-2 text-sm text-slate-500">Perawatan acne untuk membantu kulit tampak lebih bersih dan segar dengan proses treatment ringan.</p>
-                                    <button class="mt-3 rounded-md bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-700">Booking</button>
+                        @forelse ($services as $service)
+                            <article class="rounded-xl border border-slate-200 p-4 transition hover:shadow-md">
+                                <div class="flex flex-col gap-4 sm:flex-row">
+                                    <div class="h-24 w-full overflow-hidden rounded-lg bg-slate-200 sm:w-32">
+                                        @if ($service->image_path)
+                                            <img src="{{ \Illuminate\Support\Facades\Storage::url($service->image_path) }}" alt="{{ $service->name }}" class="h-full w-full object-cover" />
+                                        @endif
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-semibold">{{ $service->name }}</h3>
+                                        <p class="text-sm font-medium text-slate-600">IDR {{ number_format($service->price, 0, ',', '.') }}</p>
+                                        <p class="mt-2 text-sm text-slate-500">{{ $service->description ?: '-' }}</p>
+                                        <a href="{{ route('user.bookings.create', ['service_id' => $service->id]) }}" class="mt-3 inline-block rounded-md bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-700">Booking</a>
+                                    </div>
                                 </div>
+                            </article>
+                        @empty
+                            <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
+                                {{ ($searchQuery ?? '') !== '' ? 'Layanan tidak ditemukan untuk kata kunci tersebut.' : 'Layanan belum tersedia.' }}
                             </div>
-                        </article>
-
-                        <article class="rounded-xl border border-slate-200 p-4 transition hover:shadow-md">
-                            <div class="flex flex-col gap-4 sm:flex-row">
-                                <div class="h-24 w-full rounded-lg bg-slate-200 sm:w-32"></div>
-                                <div class="flex-1">
-                                    <h3 class="text-xl font-semibold">Acne Treatment with Jet Ozone</h3>
-                                    <p class="text-sm font-medium text-slate-600">IDR 230.000</p>
-                                    <p class="mt-2 text-sm text-slate-500">Perawatan menggunakan teknologi jet ozone yang membantu menenangkan kulit berjerawat dan meredakan kemerahan.</p>
-                                    <button class="mt-3 rounded-md bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-700">Booking</button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="rounded-xl border border-slate-200 p-4 transition hover:shadow-md">
-                            <div class="flex flex-col gap-4 sm:flex-row">
-                                <div class="h-24 w-full rounded-lg bg-slate-200 sm:w-32"></div>
-                                <div class="flex-1">
-                                    <h3 class="text-xl font-semibold">Advance Acne Treatment with IPL</h3>
-                                    <p class="text-sm font-medium text-slate-600">IDR 450.000</p>
-                                    <p class="mt-2 text-sm text-slate-500">Perawatan intensif menggunakan energi IPL untuk membantu mengurangi bekas jerawat dan menyeimbangkan kondisi kulit.</p>
-                                    <button class="mt-3 rounded-md bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-700">Booking</button>
-                                </div>
-                            </div>
-                        </article>
+                        @endforelse
                     </div>
                 @endif
             </div>
