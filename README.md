@@ -1,58 +1,206 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Klinik Eva Mulia - Laravel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi manajemen klinik berbasis Laravel untuk 2 peran utama:
+- `admin`: kelola layanan, slot booking, transaksi, dan laporan
+- `user`: cari layanan, booking treatment, lihat riwayat, cetak invoice
 
-## About Laravel
+Stack utama:
+- Laravel 13
+- PHP 8.3+
+- MySQL
+- Tailwind CSS + Vite
+- Breeze Auth (custom login pakai `username`)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 1. Clone Project
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <URL_REPOSITORY_KAMU> klinik-evm
+cd klinik-evm
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## 2. Install Dependency
 
-## Contributing
+```bash
+composer install
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 3. Setup Environment (`.env`)
 
-## Code of Conduct
+Copy file env:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+Generate app key:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan key:generate
+```
 
-## License
+Ubah konfigurasi database di `.env`:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```env
+APP_NAME="Klinik Eva Mulia"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=klinik-evamulia
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Sesuaikan `DB_USERNAME` dan `DB_PASSWORD` dengan MySQL lokal kamu.
+
+## 4. Buat Database MySQL
+
+Masuk ke MySQL lalu jalankan:
+
+```sql
+CREATE DATABASE `klinik-evamulia` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+## 5. Migrasi & Seeder
+
+Jalankan migrasi + data awal:
+
+```bash
+php artisan migrate --seed
+```
+
+Jika butuh symlink storage:
+
+```bash
+php artisan storage:link
+```
+
+## 6. Jalankan Project
+
+Terminal 1 (Laravel):
+
+```bash
+php artisan serve
+```
+
+Terminal 2 (Vite):
+
+```bash
+npm run dev
+```
+
+Buka:
+- `http://127.0.0.1:8000`
+
+## 7. Akun Default Seeder
+
+Setelah `php artisan migrate --seed`, akun default:
+
+- Admin
+  - username: `admin`
+  - password: `password`
+- User
+  - username: `user`
+  - password: `password`
+
+## 8. Alur Fitur Singkat
+
+### Admin
+- Dashboard
+- Kelola layanan (CRUD + toggle aktif/nonaktif)
+- Kelola slot booking (CRUD)
+- Lihat transaksi booking
+- Laporan transaksi berdasarkan rentang tanggal + halaman preview/print
+
+### User
+- Dashboard layanan + pencarian
+- Buat booking treatment
+- Riwayat booking
+- Cetak invoice booking
+
+## 9. Daftar Route Utama
+
+## Auth
+- `GET /login` -> `login`
+- `POST /login`
+- `GET /register` -> `register`
+- `POST /register`
+- `POST /logout` -> `logout`
+
+## General
+- `GET /` -> `home` (redirect ke dashboard, wajib login)
+- `GET /dashboard` -> `dashboard`
+
+## Admin - Services
+- `GET /admin/services` -> `admin.services.index`
+- `GET /admin/services/create` -> `admin.services.create`
+- `POST /admin/services` -> `admin.services.store`
+- `GET /admin/services/{service}/edit` -> `admin.services.edit`
+- `PUT /admin/services/{service}` -> `admin.services.update`
+- `PATCH /admin/services/{service}/toggle` -> `admin.services.toggle`
+- `DELETE /admin/services/{service}` -> `admin.services.destroy`
+
+## Admin - Booking Slots
+- `GET /admin/bookings` -> `admin.bookings.index`
+- `GET /admin/bookings/create` -> `admin.bookings.create`
+- `POST /admin/bookings` -> `admin.bookings.store`
+- `GET /admin/bookings/{booking}/edit` -> `admin.bookings.edit`
+- `PUT /admin/bookings/{booking}` -> `admin.bookings.update`
+- `DELETE /admin/bookings/{booking}` -> `admin.bookings.destroy`
+
+## Admin - Transactions & Reports
+- `GET /admin/transactions` -> `admin.transactions.index`
+- `GET /admin/reports` -> `admin.reports.index`
+- `GET /admin/reports/preview` -> `admin.reports.preview`
+
+## User - Bookings
+- `GET /user/bookings` -> `user.bookings.index` (riwayat)
+- `GET /user/bookings/create` -> `user.bookings.create`
+- `POST /user/bookings` -> `user.bookings.store`
+- `GET /user/bookings/{booking}/invoice` -> `user.bookings.invoice`
+
+## 10. Build untuk Production
+
+```bash
+npm run build
+php artisan optimize
+```
+
+## 11. Troubleshooting
+
+### `Vite manifest not found`
+Jalankan:
+
+```bash
+npm install
+npm run dev
+```
+
+atau untuk production:
+
+```bash
+npm run build
+```
+
+### `Table ... doesn't exist`
+Jalankan migrasi:
+
+```bash
+php artisan migrate --seed
+```
+
+### Route terbaru belum terbaca
+
+```bash
+php artisan optimize:clear
+```
+
+## 12. Catatan
+
+- Semua route bisnis di atas berada dalam middleware `auth`.
+- Pembatasan role (`admin` / `user`) ditangani di controller masing-masing.
+- Jika menambah fitur baru, update bagian **Daftar Route Utama** di README ini agar dokumentasi tetap sinkron.
