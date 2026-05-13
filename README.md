@@ -14,7 +14,7 @@ Stack utama:
 ## 1. Clone Project
 
 ```bash
-git clone <URL_REPOSITORY_KAMU> klinik-evm
+git clone https://github.com/fliyyer/klinik-evm.git
 cd klinik-evm
 ```
 
