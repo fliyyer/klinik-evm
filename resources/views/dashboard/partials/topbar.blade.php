@@ -1,4 +1,4 @@
-<header class="mb-6 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-3">
+<header class="fixed left-72 right-0 top-0 z-20 flex h-20 items-center justify-between border-b border-slate-200 bg-white px-8">
     <div>
         <p class="text-sm text-slate-500">Dashboard</p>
         <h2 class="text-lg font-semibold text-slate-900">Klinik Eva Mulia</h2>

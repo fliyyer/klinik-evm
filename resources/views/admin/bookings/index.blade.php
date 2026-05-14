@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-slate-100 text-slate-900">
-    <div class="min-h-screen flex">
+    <div class="min-h-screen bg-slate-100">
         @include('dashboard.partials.sidebar', [
             'user' => $user,
             'subtitle' => 'Login sebagai',
@@ -18,7 +18,7 @@
             'menus' => $menus,
         ])
 
-        <main class="flex-1 p-8">
+        <main class="ml-72 h-screen overflow-y-auto px-8 pb-8 pt-28">
             @include('dashboard.partials.topbar', ['user' => $user])
 
             <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">

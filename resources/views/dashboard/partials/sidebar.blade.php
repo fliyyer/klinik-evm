@@ -1,4 +1,4 @@
-<aside class="border-r border-slate-200 bg-white min-h-screen w-72 shrink-0">
+<aside class="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto border-r border-slate-200 bg-white">
     <div class="bg-gradient-to-r from-indigo-700 to-violet-600 px-6 py-5 text-white">
         <div class="flex items-center gap-3">
             <img src="{{ asset('logo.png') }}" alt="Logo Klinik Eva Mulia" class="h-16 w-auto" />
