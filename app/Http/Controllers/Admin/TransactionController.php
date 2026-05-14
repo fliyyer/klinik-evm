@@ -39,6 +39,24 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function updateStatus(Request $request, Booking $booking)
+    {
+        $user = auth()->user();
+        abort_unless($user->role === 'admin', 403);
+
+        $validated = $request->validate([
+            'status' => ['required', 'in:pending,confirmed,completed,cancelled'],
+        ]);
+
+        $booking->update([
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()
+            ->route('admin.transactions.index', ['q' => $request->input('q')])
+            ->with('status', 'Status booking berhasil diperbarui.');
+    }
+
     private function adminMenus(string $activeKey): array
     {
         $menus = [

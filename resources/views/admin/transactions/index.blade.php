@@ -22,6 +22,12 @@
             @include('dashboard.partials.topbar', ['user' => $user])
 
             <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+                @if (session('status'))
+                    <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
                 <div class="flex flex-wrap items-center justify-between gap-4">
                     <h1 class="text-3xl font-bold text-slate-900">Data Transaksi</h1>
 
@@ -40,6 +46,7 @@
                 </div>
 
                 <div class="mt-6 overflow-hidden rounded-xl border border-slate-200">
+                    <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-slate-200 text-sm">
                         <thead class="bg-slate-50 text-slate-700">
                             <tr>
@@ -50,6 +57,8 @@
                                 <th class="px-4 py-3 text-left font-medium">Tgl.booking</th>
                                 <th class="px-4 py-3 text-left font-medium">Jam booking</th>
                                 <th class="px-4 py-3 text-left font-medium">Harga</th>
+                                <th class="px-4 py-3 text-left font-medium">Status</th>
+                                <th class="px-4 py-3 text-left font-medium">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 bg-white">
@@ -71,17 +80,34 @@
                                     <td class="px-4 py-3">{{ $trx->booking_date->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3">{{ \Carbon\Carbon::parse($trx->booking_time)->format('H:i') }}</td>
                                     <td class="px-4 py-3">{{ number_format($trx->service->price, 0, ',', '.') }}</td>
-                                    <!-- <td class="px-4 py-3">
+                                    <td class="px-4 py-3">
                                         <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 {{ $style }}">{{ $label }}</span>
-                                    </td> -->
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <form method="POST" action="{{ route('admin.transactions.status', $trx) }}" class="flex items-center gap-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="q" value="{{ $searchQuery }}">
+                                            <select name="status" class="rounded-lg border-slate-300 py-1.5 text-xs focus:border-violet-500 focus:ring-violet-500">
+                                                <option value="pending" @selected($trx->status === 'pending')>Dipesan</option>
+                                                <option value="confirmed" @selected($trx->status === 'confirmed')>Dikonfirmasi</option>
+                                                <option value="completed" @selected($trx->status === 'completed')>Selesai</option>
+                                                <option value="cancelled" @selected($trx->status === 'cancelled')>Cancel</option>
+                                            </select>
+                                            <button type="submit" class="rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-violet-700">
+                                                Update
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="px-4 py-10 text-center text-slate-500">Belum ada data transaksi.</td>
+                                    <td colspan="9" class="px-4 py-10 text-center text-slate-500">Belum ada data transaksi.</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </section>
         </main>

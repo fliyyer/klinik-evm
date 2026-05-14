@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/admin/transactions', [TransactionController::class, 'index'])
         ->name('admin.transactions.index');
+    Route::patch('/admin/transactions/{booking}/status', [TransactionController::class, 'updateStatus'])
+        ->name('admin.transactions.status');
 
     Route::get('/admin/reports', [ReportController::class, 'index'])
         ->name('admin.reports.index');
